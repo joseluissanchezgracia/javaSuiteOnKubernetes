@@ -1,0 +1,20 @@
+# Login en el Container Registry privado. Argumentos: [Servidor] -u [username] -p [password]
+docker login pocehcoscloudcr-on.azurecr.io -u pocehcoscloudcr -p XoK/b==7QDz/q/2Fnq8vJUd8sQhQFQR7
+
+# Build de la imagen sin proxy
+docker build -t activemq-node .
+
+# Build de la imagen con proxy
+docker build -t activemq-node --build-arg http_proxy=http://10.121.8.100:8080 --build-arg https_proxy=http://10.121.8.100:8080 .
+
+# Run de la imagen en docker local
+# docker run -i -t -p 8161:8161 -p 61616:61616 -p 5672:5672 -p 61613:61613 -p 1883:1883 -p 61614:61614 activemq-node
+
+# Etiquetado de la imagen
+docker tag activemq-node pocehcoscloudcr-on.azurecr.io/activemq-node:v4.3-cloud
+
+# Push de la imagen al Container Registry
+docker push pocehcoscloudcr-on.azurecr.io/activemq-node:v4.3-cloud
+
+# Logoug del Container Registry
+docker logout

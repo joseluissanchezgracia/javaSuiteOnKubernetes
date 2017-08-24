@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ehcos-cas-dep
+  labels:
+    #suite: ehcos
+    app: cas
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        suite: ehcos
+        app: cas
+    spec:
+      containers:
+      - name: cas-module
+        image: pocehcoscloudcr-on.azurecr.io/cas-module:v4.3-cloud
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "400m"
+          limits:
+            memory: "1Gi"
+        readinessProbe:
+          httpGet:
+            path: /cas
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 2
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /cas
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 40
+          timeoutSeconds: 2
+          periodSeconds: 10
+        env:
+          - name: ETCD_SERVER_URL 
+            value: "http://40.69.65.71:2379"
+          - name: MULTITENANCY_ENABLED
+            value: "true"
+          - name: ETCD_SERVER_TENANTSPATH
+            value: "tenants"
+          - name: JDBC_DRIVERCLASSNAME
+            value: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+          - name: JDBC_URL
+            value: "jdbc:sqlserver://ehcoscloudsql.database.windows.net:1433;database=hospital1"
+          - name: JDBC_USER
+            value: "azure_user"
+          - name: JDBC_PASS
+            value: "ehCOS2014"
+          - name: JDBC_VALIDATIONQUERY
+            value: "select 1"
+          - name: PERSISTENCE_DIALECT
+            value: "org.hibernate.dialect.SQLServerDialect"
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: ehcoscrsecret 

@@ -1,0 +1,2 @@
+Atencion: 
+La compilacion y configuracion de XML del cas es diferente si se trata de un escenario sencillo o si se trata de un escenario con replica RMI y varios nodos CAS

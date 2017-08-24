@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %X{tenant} %c - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="productFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${server.home}/logs/ehCS.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %5p %X{tenant} %C,%t:%L - %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="projectFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${server.home}/logs/ehCSProject.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %5p %X{tenant} %C,%t:%L - %m%n" />
+		</layout>
+	</appender>
+	
+       <appender name="fileAudit" class="org.apache.log4j.DailyRollingFileAppender">
+             <param name="File" value="${server.home}/logs/ehCS_audit.log" />
+             <param name="DatePattern" value="'.'yyyy-MM-dd" />
+             <param name="append" value="false" />
+             <layout class="org.apache.log4j.PatternLayout">
+                    <param name="ConversionPattern" value="%d{ABSOLUTE} %5p %X{tenant} %C,%t:%L - %m%n" />
+             </layout>
+       </appender>
+
+        <appender name="bdAuditOracle" class="org.apache.log4j.jdbc.JDBCAppender">
+             <param name="driver" value="oracle.jdbc.driver.OracleDriver" />
+            <!-- Driver servidor -->
+            <!-- <param name="driver" value="oracle.jdbc.OracleDriver" /> -->
+             <param name="URL" value="jdbc:oracle:thin:@localhost:1521:oracledb" />
+             <param name="user" value="system" />
+             <param name="password" value="ehCOS2011" />
+             <param name="sql"
+                    value="INSERT INTO ehcos.HK_AUDIT(DATED,LOGGER,PRIORITY,MESSAGE,EH_USER)   
+                           VALUES ( '%d{dd/MM/yy H:mm:s,SSS}','%c ','%p ','%m ', 
+                           (SELECT SUBSTR(SUBSTR('%m ', instr('%m ', ' '), instr('%m ', '|') - instr( '%m ', ' ')),2) from dual))" />
+       </appender>
+       
+		<appender name="bdAuditPostgres" class="org.apache.log4j.jdbc.JDBCAppender">
+			<param name="driver" value="org.postgresql.Driver" />
+			<!-- Driver servidor -->
+			<!-- <param name="driver" value="oracle.jdbc.OracleDriver" /> -->
+			<param name="URL" value="jdbc:postgresql://192.168.50.81:5432/ehcos" />
+			<param name="user" value="postgres" />
+			<param name="password" value="postgres" />
+			<param name="sql"
+				value="INSERT INTO ehcos.HK_AUDIT(LOG_ID,DATED,LOGGER,PRIORITY,MESSAGE,EH_USER)   
+	                           VALUES (nextval('EHCOS.LOG_ID_SEQ'),'%d{dd/MM/yy H:mm:s,SSS}','%c ','%p ','%m ', 
+	                           ( SUBSTR(SUBSTR('%m ', instr('%m ', ' '), instr('%m ', '|') - instr( '%m ', ' ')),2) ))" />
+		</appender>
+
+	<!-- Product Loggers -->
+	<!--logger name="com.everis.ehcos">
+		<level value="ERROR"></level>
+		<appender-ref ref="productFileAppender"/>
+	</logger-->
+	
+	<!-- Project Loggers -->
+	<!--logger name="com.everis.ehproject">
+		<level value="ERROR"></level>
+		<appender-ref ref="projectFileAppender"/>
+	</logger-->
+	
+	<!-- Audit Loggers -->
+	<!--logger name="loggerAudit">
+		<level value="INFO"></level>
+		<appender-ref ref="fileAudit"/>		
+	</logger-->
+
+        <!--logger name="loggerHKAudit">
+                <level value="INFO"></level>
+                <appender-ref ref="bdAuditPostgres"/>
+        </logger-->
+
+
+	<!-- 3rdparty Loggers -->
+	<!--logger name="org.springframework.core" />
+
+	<logger name="org.springframework.beans" />
+
+	<logger name="org.springframework.context" />
+
+	<logger name="org.springframework.security" />
+
+	<logger name="org.springframework.web" />
+
+	<logger name="org.hibernate" /-->
+
+	<!-- Root Logger -->
+	<root>
+		<priority value="ERROR" />
+		<appender-ref ref="console" />
+		<appender-ref ref="projectFileAppender"/>
+	</root>
+
+</log4j:configuration>

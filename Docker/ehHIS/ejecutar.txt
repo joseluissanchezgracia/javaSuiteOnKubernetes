@@ -1,0 +1,17 @@
+# Login en el Container Registry privado. Argumentos: [Servidor] -u [username] -p [password]
+docker login pocehcoscloudcr-on.azurecr.io -u pocehcoscloudcr -p XoK/b==7QDz/q/2Fnq8vJUd8sQhQFQR7
+
+# Build de la imagen sin proxy
+docker build -t ehhis-module .
+
+# Build de la imagen con proxy
+docker build -t ehhis-module --build-arg http_proxy=http://10.121.8.100:8080 --build-arg https_proxy=http://10.121.8.100:8080 .
+
+# Etiquetado de la imagen
+docker tag ehhis-module pocehcoscloudcr-on.azurecr.io/ehhis-module:v4.3-cloud
+
+# Push de la imagen al Container Registry
+docker push pocehcoscloudcr-on.azurecr.io/ehhis-module:v4.3-cloud
+
+# Logoug del Container Registry
+docker logout

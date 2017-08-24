@@ -1,0 +1,1 @@
+export CATALINA_OPTS="$CATALINA_OPTS -Dprops.path=/tomcat/properties -Xms128M -Xmx1024M -XX:MaxPermSize=128M"

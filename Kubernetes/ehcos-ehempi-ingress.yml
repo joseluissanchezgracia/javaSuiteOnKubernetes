@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ehcos-ehempi-ingress
+  labels:
+    suite: ehcos
+    app: ehempi-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  backend:
+    serviceName: ehcos-ehempi-svc
+    servicePort: 80
+  rules:
+  - http:
+      paths:
+      - path: /ehEMPI-ui
+        backend:
+          serviceName: ehcos-ehempi-svc
+          servicePort: 80

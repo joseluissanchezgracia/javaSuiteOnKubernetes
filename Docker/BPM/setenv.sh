@@ -1,0 +1,2 @@
+export JAVA_OPTS="$JAVA_OPTS -Detcd.server.tenantsConfigurationPath=$ETCD_SERVER_TENANTSPATH -Detcd.server.url=$ETCD_SERVER_URL -Dmultitenancy.enabled=$MULTITENANCY_ENABLED -Dprops.path=/tomcat/properties/ -Ddb.type=azuresql -Ddbconnection.type=jndi -Dserver.home=/tomcat -DenableLogger=/tomcat/properties/"
+export CATALINA_OPTS="$CATALINA_OPTS -Xms128M -Xmx1024M -XX:MaxPermSize=128M"
