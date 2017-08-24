@@ -17,12 +17,18 @@ RUN mv apache-tomcat-7.0.70 tomcat
 RUN echo ## TOMCAT INSTALLED.......... ##
   
 #Instalar java version "1.7.0_80"
-RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections  
-RUN add-apt-repository -y ppa:webupd8team/java  
-RUN apt-get -y update 
-RUN apt-get install -y oracle-java7-installer
+#RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections  
+#RUN add-apt-repository -y ppa:webupd8team/java  
+#RUN apt-get -y update 
+#RUN apt-get install -y oracle-java7-installer
 
-ENV JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre
+#ENV JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre
+
+sudo add-apt-repository ppa:openjdk-r/ppa  
+sudo apt-get update   
+sudo apt-get install openjdk-7-jdk
+
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
 
 RUN echo ##JAVA INSTALADO ##
 
