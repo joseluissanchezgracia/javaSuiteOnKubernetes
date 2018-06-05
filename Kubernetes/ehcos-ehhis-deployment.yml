@@ -1,0 +1,94 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ehcos-ehhis-dep
+  labels:
+    suite: ehcos
+    app: ehhis
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        suite: ehcos
+        app: ehhis
+    spec:
+      volumes:
+      - name: ehcos-volume
+        persistentVolumeClaim:
+         claimName: ehcos-pvc
+      containers:
+      - name: ehhis-module
+        image: pocehcoscloudcr-on.azurecr.io/ehhis-module:v4.3-cloud
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "1.68Gi"
+            cpu: "400m"
+          limits:
+            memory: "1.68Gi"
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 70
+          timeoutSeconds: 5
+          periodSeconds: 10
+        env:
+          - name: ETCD_SERVER_URL
+            value: "http://40.69.65.71:2379"
+          - name: MULTITENANCY_ENABLED
+            value: "true"
+          - name: ETCD_SERVER_TENANTSPATH
+            value: "tenants"
+          - name: JNDI_NAME
+            value: "java:comp/env/jdbc/ehCOSDatasourceCS"
+          - name: PERSISTENCE_DIALECT
+            value: "org.hibernate.dialect.SQLServerDialect"
+          - name: JDBC_DATABASE
+            value: "SQL_SERVER"
+          - name: CAS_IP_ADDRESS
+            value: "52.169.0.95"
+          - name: CAS_NOPUBLIC_IP_ADDRESS
+            value: "52.169.0.95"
+          - name: ENV_IP_ADDRESS
+            value: "52.169.0.95"
+          - name: HTTP_TYPE
+            value: "http"
+          - name: REMOTING_ADDRESS
+            value: "ehcos-mule-svc:63080"
+          - name: SERVER_WEBAPPS_PATH
+            value: "/tomcat/webapps"
+          - name: JDBC_DRIVERCLASSNAME 
+            value: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+          - name: JDBC_URL 
+            value: "jdbc:sqlserver://ehcoscloudsql.database.windows.net:1433;database=hospital1"
+          - name: JDBC_USER 
+            value: "azure_user"
+          - name: JDBC_PASS
+            value: "ehCOS2014"
+          - name: SERVER_WEBAPPS_PATH
+            value: "/tomcat/webapps"
+          - name: ENABLE_INT
+            value: "true"
+          - name: BPM_IP_ADDRESS
+            value: "52.169.0.95"
+          - name: HIS_IP_ADDRESS
+            value: "52.169.0.95"
+          - name: EHCOS_IP_ADDRESS
+            value: "52.169.0.95"
+          - name: EMPI_IP_ADDRESS
+            value: "52.169.0.95"
+          - name: JDBC_VALIDATIONQUERY
+            value: "Select 1"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: "/share"
+          name: ehcos-volume
+      imagePullSecrets:
+        - name: ehcoscrsecret

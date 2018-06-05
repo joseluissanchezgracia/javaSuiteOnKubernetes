@@ -1,0 +1,100 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ehcos-mule-dep
+  labels:
+    suite: ehcos
+    app: mule
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        suite: ehcos
+        app: mule
+    spec:
+      containers:
+      - name: mule
+        image: pocehcoscloudcr-on.azurecr.io/mule-node-3.4.0:v4.3-cloud
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "1.5Gi"
+            cpu: "400m"
+          limits:
+            memory: "1.5Gi"
+        readinessProbe:
+          tcpSocket:
+            port: 63080
+          timeoutSeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 63080
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          periodSeconds: 10
+        env:
+          - name: proxy_host
+            value: "localhost"
+          - name: proxy_port
+            value: "63082"
+          - name: proxy_port_ssl
+            value: "63083"
+          - name: cas_protocol
+            value: "http"
+          - name: cas_host
+            value: "52.169.0.95"
+          - name: cas_port
+            value: "80"
+          - name: cas_context
+            value: "/cas"
+          - name: ws_host
+            value: "localhost"
+          - name: ws_port
+            value: "6001"
+          - name: mqbroker_host
+            value: "localhost"
+          - name: mqbroker_port
+            value: "61616"
+            # mqserv_host set as 0.0.0.0 in order to allow connections from any host
+          - name: mqserv_host
+            value: "0.0.0.0"
+          - name: mqserv_port
+            value: "63080"
+          - name: application_host
+            value: "52.169.0.95"
+          - name: application_port
+            value: "80"
+          - name: application_host_his
+            value: "52.169.0.95"
+          - name: application_port_his
+            value: "80"
+          - name: application_host_empi
+            value: "52.169.0.95"
+          - name: application_port_empi
+            value: "80"
+          - name: application_host_clinicalShare
+            value: "52.169.0.95"
+          - name: application_port_clinicalShare
+            value: "80"
+        ports:
+        - containerPort: 63080
+      - name: activemq
+        image: pocehcoscloudcr-on.azurecr.io/activemq-node:v4.3-cloud
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "0.4Gi"
+            cpu: "100m"
+          limits:
+            memory: "0.4Gi"
+        ports:
+        - containerPort: 8161
+        - containerPort: 61616
+        - containerPort: 5672
+        - containerPort: 61613
+        - containerPort: 1883
+        - containerPort: 61614 
+      imagePullSecrets:
+        - name: ehcoscrsecret

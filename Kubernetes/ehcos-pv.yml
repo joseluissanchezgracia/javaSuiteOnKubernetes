@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ehcos-pv
+  labels:
+    suite: ehcos
+spec:
+  capacity:
+    storage: 5Ti
+  accessModes:
+  - ReadWriteMany
+  azureFile:
+    secretName: azure-staccount-secret
+    shareName: ehcos
+    readOnly: false
+  claimRef:
+    namespace: default
+    name: ehcos-pvc

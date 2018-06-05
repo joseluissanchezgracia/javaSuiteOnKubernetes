@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ehcos-ehhis-hpa
+  labels:
+    suite: ehcos
+    app: ehhis
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: ehcos-ehhis-dep
+  minReplicas: 2
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

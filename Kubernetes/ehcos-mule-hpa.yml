@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ehcos-mule-hpa
+  labels:
+    suite: ehcos
+    app: mule
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: ehcos-mule-dep
+  minReplicas: 2
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

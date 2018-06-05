@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cas-node-1-svc
+  labels:
+    suite: ehcos
+    app: cas-balanced
+    name: cas-node-1-svc
+spec:
+  ports:
+    - port: 41001
+      name: listeningport
+      targetPort: 41001
+    - port: 41002
+      name: remoteport
+      targetPort: 41002
+  clusterIP: "None"
+  #selecciona un nodo exclusivamente en cas-balanced    
+  selector:
+    app: cas-balanced
+    name: cas-node-1
