@@ -44,9 +44,9 @@ ENV ETCD_SERVER_TENANTSPATH	tenants
 
 #default BBDD
 ENV JDBC_DRIVERCLASSNAME    com.microsoft.sqlserver.jdbc.SQLServerDriver
-ENV JDBC_URL                jdbc:sqlserver://ehcoscloudsql.database.windows.net:1433;database=hospital1
-ENV JDBC_USER               azure_user@ehcoscloudsql
-ENV JDBC_PASS               ehCOS2014
+ENV JDBC_URL                jdbc:sqlserver://<db>:1433;database=hospital1
+ENV JDBC_USER               
+ENV JDBC_PASS               
 ENV JDBC_VALIDATIONQUERY	select 1
 ENV PERSISTENCE_DIALECT		org.hibernate.dialect.SQLServerDialect
 
